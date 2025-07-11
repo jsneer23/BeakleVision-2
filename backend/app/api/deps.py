@@ -11,11 +11,16 @@ from sqlmodel import Session
 from app.core import security
 from app.core.config import settings
 from app.core.db import engine
-from app.models import TokenPayload, User
+from app.core.valkey import ValkeyCache, valkey_cache
+from app.models.app import TokenPayload, User
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
+
+def get_valkey() -> Generator[ValkeyCache, None, None]:
+    with valkey_cache as cache:
+        yield cache
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -23,6 +28,7 @@ def get_db() -> Generator[Session, None, None]:
         yield session
 
 
+ValkeyDep = Annotated[ValkeyCache, Depends(get_valkey)]
 SessionDep = Annotated[Session, Depends(get_db)]
 TokenDep = Annotated[str, Depends(reusable_oauth2)]
 

@@ -1,5 +1,13 @@
 services:
 
+  valkey:
+    container_name: valkey
+    image: valkey/valkey-bundle:8.1.0-alpine
+    healthcheck:
+      test: valkey-cli PING || exit 1
+    ports:
+      - 6379:6379
+
   db:
     image: postgres:17
     restart: always
@@ -68,6 +76,8 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
       - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
+      - VALKEY_CACHE_URI=${VALKEY_CACHE_URI}
+      - TBA_API_KEY=${TBA_API_KEY}
       - POSTGRES_SERVER=db
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_DB=${POSTGRES_DB}
@@ -101,6 +111,8 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
       - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
+      - VALKEY_CACHE_URI=${VALKEY_CACHE_URI}
+      - TBA_API_KEY=${TBA_API_KEY}
       - POSTGRES_SERVER=db
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_DB=${POSTGRES_DB}
@@ -164,6 +176,8 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=https-redirect
 volumes:
   app-db-data:
+  redisinsight:
+  valkey-data:
 
 networks:
   traefik-public:

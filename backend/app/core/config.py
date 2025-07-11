@@ -69,6 +69,9 @@ class Settings(BaseSettings):
             path=self.POSTGRES_DB,
         )
 
+    VALKEY_CACHE_URI: str | None = None
+    TBA_API_KEY: str | None = None
+
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
     SMTP_PORT: int = 587
