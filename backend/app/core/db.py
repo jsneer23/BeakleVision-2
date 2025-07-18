@@ -1,12 +1,14 @@
 from sqlmodel import Session, create_engine, select
 
-import app.models.base  # noqa: F401
 from app.core.config import settings
 from app.crud import app as app_crud
 from app.models.app import User, UserCreate
+from app.models.event import Event  # noqa: F401
+from app.models.match import Match  # noqa: F401
+from app.models.team import Team, TeamYearStats  # noqa: F401
+from app.models.year import YearStats  # noqa: F401
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
-
 
 # make sure all SQLModel models are imported (app.models) before initializing DB
 # otherwise, SQLModel might fail to initialize relationships properly
@@ -17,10 +19,10 @@ def init_db(session: Session) -> None:
     # Tables should be created with Alembic migrations
     # But if you don't want to use migrations, create
     # the tables un-commenting the next lines
-    from sqlmodel import SQLModel
+    #from sqlmodel import SQLModel
 
     # This works because the models are already imported and registered from app.models
-    SQLModel.metadata.create_all(engine)
+    #SQLModel.metadata.create_all(engine)
 
     user = session.exec(
         select(User).where(User.email == settings.FIRST_SUPERUSER)

@@ -4,7 +4,7 @@ from sqlmodel import Session
 
 from app.core.db import engine, init_db
 from app.crud.tba_init import create_or_update_year_stats
-from app.models.base import YearStats
+from app.models.year import YearStats
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

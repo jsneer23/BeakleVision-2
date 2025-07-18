@@ -1,6 +1,9 @@
 from sqlmodel import Session, select
 
-from app.models.base import Event, Match, Team, YearStats
+from app.models.event import Event
+from app.models.match import Match
+from app.models.team import Team
+from app.models.year import YearStats
 
 
 def create_team(*, session: Session, team_in: Team) -> Team:

@@ -1,22 +1,16 @@
-import multiprocessing
-
 from fastapi import APIRouter, HTTPException
-from sqlmodel import select
 
 from app.api.deps import (  # noqa: F401
     SessionDep,
     ValkeyDep,
     get_current_active_superuser,
 )
-from app.crud.tba_init import (
-    create_or_update_event,
-    create_or_update_match,
-    create_or_update_team,
-)
 from app.models.app import Message
-from app.models.base import Event, Match, Team
-from app.models.helpers import valid_event, valid_match
+from app.services.event import EventService
+from app.services.match import MatchService
+from app.services.team import TeamService
 from app.tba.main import tba_api_call
+from app.tba.utils import validate_year
 
 router = APIRouter(prefix="/tba", tags=["tba"])
 
@@ -35,9 +29,10 @@ async def init_teams(session: SessionDep, cache: ValkeyDep) -> Message:
         endpoint: str = "teams/" + str(i)
         team_json = await tba_api_call(cache, endpoint)
 
+        team_service = TeamService(session)
+
         for team in team_json:
-            team_model: Team = Team(team)
-            create_or_update_team(session, team_model)
+            team_service.from_tba(team)
 
     return Message(message="Fetched teams.")
 
@@ -49,23 +44,21 @@ async def init_teams(session: SessionDep, cache: ValkeyDep) -> Message:
 )
 async def init_events(session: SessionDep, cache: ValkeyDep, year: int) -> Message:
     """
-    Get teams.
+    Get Events
     """
 
-    if year < 1992 or year > 2026:
+    try:
+        validate_year(year)
+    except ValueError:
         raise HTTPException(status_code=400, detail="Invalid year.")
 
     endpoint: str = "events/" + str(year)
     event_json = await tba_api_call(cache, endpoint)
 
+    event_service = EventService(session)
+
     for event in event_json:
-
-        if not valid_event(event):
-            continue
-
-        event_model= Event(event)
-
-        create_or_update_event(session, event_model)
+        event_service.from_tba(event)
 
     return Message(message="Fetched events.")
 
@@ -79,31 +72,24 @@ async def init_matches(session: SessionDep, cache: ValkeyDep, year: int) -> Mess
     Get matches.
     """
 
-    if year < 1992 or year > 2026:
-        raise HTTPException(status_code=400, detail="Invalid year.")
+    event_service = EventService(session)
 
-    statement = select(Event).where(Event.year == year)
-    events = session.exec(statement)
+    try:
+        events = event_service.get_events(year)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Error fetching events. Try running /tba/events/{year} first or enter a valid year.")
 
-    if not events.first():
-        raise HTTPException(status_code=404, detail="No events found for this year. Try fetching events first.")
+    match_service = MatchService(session)
 
-    events = session.exec(statement)
+    matches = 0
+
     for event in events:
 
         endpoint: str = "event/" + event.key + "/matches"
         match_json = await tba_api_call(cache, endpoint)
 
-        print(f"Processing matches for event: {event.key}")
-
         for match in match_json:
+            matches += 1
+            match_service.from_tba(match)
 
-            if not valid_match(match):
-                continue
-
-            #print("Processing match:", match["key"])
-            match_model = Match(match, year)
-
-            create_or_update_match(session, match_model)
-
-    return Message(message="Fetched matches.")
+    return Message(message=f"Fetched {matches} matches.")

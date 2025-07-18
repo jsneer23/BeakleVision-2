@@ -19,7 +19,10 @@ fileConfig(config.config_file_name)
 # target_metadata = None
 
 from app.models.app import SQLModel  # noqa
-from app.models.base import SQLModel  # noqa
+from app.models.team import SQLModel  # noqa
+from app.models.event import SQLModel  # noqa
+from app.models.match import SQLModel  # noqa
+from app.models.year import SQLModel  # noqa
 from app.core.config import settings # noqa
 
 target_metadata = SQLModel.metadata
