@@ -17,11 +17,22 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+    },
+    "types":[
+      "unplugin-icons/types/react",
+    ]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "playwright.config.ts"],
+  "include": [
+    "src/**/*.tsx", 
+    "src/**/*.ts", 
+    "tests/**/*.ts", 
+    "playwright.config.ts", 
+    "src/utils.tsx",
+    "src/icons.d.ts"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

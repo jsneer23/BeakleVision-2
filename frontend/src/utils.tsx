@@ -1,5 +1,7 @@
 import type { ApiError } from "./client"
 import useCustomToast from "./hooks/useCustomToast"
+import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from 'clsx';
 
 export const emailPattern = {
   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -52,4 +54,13 @@ export const handleError = (err: ApiError) => {
     errorMessage = errDetail[0].msg
   }
   showErrorToast(errorMessage)
+}
+
+// added
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function removeNonNumeric(str: string): string {
+  return str.replace(/\D/g, '');
 }
