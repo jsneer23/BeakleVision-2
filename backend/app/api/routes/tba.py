@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from app.api.deps import (  # noqa: F401
     SessionDep,
     ValkeyDep,
-    get_current_active_superuser, # TODO require login to call these endpoints???
+    get_current_active_superuser,  # TODO require login to call these endpoints???
 )
 from app.core.db import AsyncSessionLocal
 from app.models.app import Message

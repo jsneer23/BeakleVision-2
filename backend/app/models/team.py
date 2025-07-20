@@ -16,7 +16,7 @@ class TeamBase(SQLModel):
     """
     key: Annotated[str, AfterValidator(strip_string)]
     number: int
-    name: Annotated[str, AfterValidator(strip_string)]
+    nickname: Annotated[str, AfterValidator(strip_string)]
     rookie_year: Annotated[int | None, AfterValidator(validate_year)]
     country: Annotated[str | None, AfterValidator(strip_string)]
     state_prov: StateProv
@@ -36,6 +36,12 @@ class TeamCreate(TeamBase):
     def validate_state_prov(cls, v: str | None) -> StateProv:
         fixed = get_state_prov(v)
         return StateProv(fixed)
+
+
+class TeamName(TeamBase):
+
+    number: str
+    name: str
 
 
 class Team(TeamBase, table=True):
