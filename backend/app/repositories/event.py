@@ -1,31 +1,28 @@
 from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.models.event import Event, EventCreate
+from app.models import Event, EventCreate
 
 from .base import BaseRepository
 
 
-class EventRepository(BaseRepository):
+class EventRepository(BaseRepository[Event, EventCreate]):
 
-    def upsert(self, update_event: EventCreate) -> Event:
-        event = Event.model_validate(update_event)
-        db_model = self.session.merge(event)
-        self.session.commit()
-        self.session.refresh(db_model)
-        return db_model
+    def __init__(self, session: AsyncSession):
+        super().__init__(session, Event, EventCreate)
 
-    def year_exists(self, year: int) -> bool:
+    async def year_exists(self, year: int) -> bool:
         """
         Check if any events for the given year exist in the database.
         """
-        statement = select(Event).where(Event.year == year)
-        events = self.session.exec(statement)
+        statement = select(Event.key).where(Event.year == year)
+        events = await self.session.exec(statement)
         return events.first() is not None
 
-    def get_events_by_year(self, year: int) -> list[Event]:
+    async def get_events_by_year(self, year: int) -> list[Event]:
         """
         Get all events for a given year.
         """
         statement = select(Event).where(Event.year == year)
-        events = self.session.exec(statement).all()
-        return events
+        events = await self.session.exec(statement)
+        return events.all()

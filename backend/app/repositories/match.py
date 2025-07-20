@@ -1,14 +1,11 @@
-from app.models.match import Match, MatchCreate
+from sqlmodel.ext.asyncio.session import AsyncSession
+
+from app.models import Match, MatchCreate
 
 from .base import BaseRepository
 
 
-class MatchRepository(BaseRepository):
+class MatchRepository(BaseRepository[Match, MatchCreate]):
 
-    def upsert(self, update_match: MatchCreate) -> Match:
-
-        match = Match.model_validate(update_match)
-        db_model = self.session.merge(match)
-        self.session.commit()
-        self.session.refresh(db_model)
-        return db_model
+    def __init__(self, session: AsyncSession):
+        super().__init__(session, Match, MatchCreate)

@@ -1,22 +1,28 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 
-from pydantic import field_validator
+from pydantic import AfterValidator
 from sqlmodel import Field, Relationship, SQLModel
+
+from app.tba.utils import validate_year
 
 if TYPE_CHECKING:
     from .event import Event
 
-class YearStats(SQLModel, table=True):
+
+class YearStatsBase(SQLModel):
+    year: int
+
+    #TODO implement year statistics
+
+
+class YearStatsCreate(YearStatsBase):
+    year: Annotated[int, AfterValidator(validate_year)]
+
+
+class YearStats(YearStatsBase, table=True):
     """
     SQL table that holds year specific statistics.
     """
     year: int = Field(primary_key=True)
 
     events: list["Event"] = Relationship(back_populates="year_stats")#2
-
-    @field_validator('year')
-    @classmethod
-    def validate_year(cls, v: int) -> int:
-        if not (1992 <= v <= 2026):
-            raise ValueError("Year must be between 1992 and 2026.")
-        return v

@@ -1,8 +1,8 @@
 """init migration
 
-Revision ID: 75976f0a2d73
+Revision ID: 0e7c9e98b3b4
 Revises: 
-Create Date: 2025-07-18 10:07:59.803437
+Create Date: 2025-07-19 15:51:41.019326
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel.sql.sqltypes
 
 
 # revision identifiers, used by Alembic.
-revision = '75976f0a2d73'
+revision = '0e7c9e98b3b4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -95,8 +95,9 @@ def upgrade():
     sa.Column('blue_dq', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('blue_surrogate', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('winner', sa.Enum('RED', 'BLUE', 'TIE', 'NOT_PLAYED', name='matchwinner'), nullable=True),
-    sa.Column('time', sa.DateTime(), nullable=False),
-    sa.Column('predicted_time', sa.Integer(), nullable=True),
+    sa.Column('time', sa.DateTime(), nullable=True),
+    sa.Column('actual_time', sa.DateTime(), nullable=True),
+    sa.Column('predicted_time', sa.DateTime(), nullable=True),
     sa.Column('red_score', sa.Integer(), nullable=True),
     sa.Column('red_no_foul_points', sa.Integer(), nullable=True),
     sa.Column('red_foul_points', sa.Integer(), nullable=True),

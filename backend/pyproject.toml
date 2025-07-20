@@ -23,6 +23,8 @@ dependencies = [
     "valkey>=6.1.0,<6.2.0",
     "orjson>=3.10.18",
     "aiohttp[speedups]>=3.12.13",
+    "asyncpg>=0.30.0",
+    "sqlalchemy[asyncio]>=2.0.41",
 ]
 
 [tool.uv]

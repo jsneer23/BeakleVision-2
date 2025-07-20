@@ -5,10 +5,9 @@ from app.api.deps import (  # noqa: F401
     ValkeyDep,
     get_current_active_superuser,
 )
+from app.core.db import AsyncSessionLocal
 from app.models.app import Message
-from app.services.event import EventService
-from app.services.match import MatchService
-from app.services.team import TeamService
+from app.services import EventService, MatchService, TeamService
 from app.tba.main import tba_api_call
 from app.tba.utils import validate_year
 
@@ -20,7 +19,7 @@ router = APIRouter(prefix="/tba", tags=["tba"])
     #dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
 )
-async def init_teams(session: SessionDep, cache: ValkeyDep) -> Message:
+async def init_teams(cache: ValkeyDep) -> Message:
     """
     Get teams.
     """
@@ -29,10 +28,10 @@ async def init_teams(session: SessionDep, cache: ValkeyDep) -> Message:
         endpoint: str = "teams/" + str(i)
         team_json = await tba_api_call(cache, endpoint)
 
-        team_service = TeamService(session)
 
         for team in team_json:
-            team_service.from_tba(team)
+            async with AsyncSessionLocal() as session:
+                await TeamService(session).from_tba(team)
 
     return Message(message="Fetched teams.")
 
@@ -42,7 +41,7 @@ async def init_teams(session: SessionDep, cache: ValkeyDep) -> Message:
     #dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
 )
-async def init_events(session: SessionDep, cache: ValkeyDep, year: int) -> Message:
+async def init_events(cache: ValkeyDep, year: int) -> Message:
     """
     Get Events
     """
@@ -55,10 +54,9 @@ async def init_events(session: SessionDep, cache: ValkeyDep, year: int) -> Messa
     endpoint: str = "events/" + str(year)
     event_json = await tba_api_call(cache, endpoint)
 
-    event_service = EventService(session)
-
     for event in event_json:
-        event_service.from_tba(event)
+        async with AsyncSessionLocal() as session:
+            await EventService(session).from_tba(event)
 
     return Message(message="Fetched events.")
 
@@ -67,19 +65,19 @@ async def init_events(session: SessionDep, cache: ValkeyDep, year: int) -> Messa
     #dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
 )
-async def init_matches(session: SessionDep, cache: ValkeyDep, year: int) -> Message:
+async def init_matches(cache: ValkeyDep, year: int) -> Message:
     """
     Get matches.
     """
 
-    event_service = EventService(session)
-
-    try:
-        events = event_service.get_events(year)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Error fetching events. Try running /tba/events/{year} first or enter a valid year.")
-
-    match_service = MatchService(session)
+    async with AsyncSessionLocal() as session:
+        try:
+            events = await EventService(session).get_events(year)
+        except ValueError:
+            raise HTTPException(status_code=400,
+                                detail=f"Error fetching events."
+                                f"Try running /tba/events/{year}"
+                                " first or enter a valid year.")
 
     matches = 0
 
@@ -88,8 +86,11 @@ async def init_matches(session: SessionDep, cache: ValkeyDep, year: int) -> Mess
         endpoint: str = "event/" + event.key + "/matches"
         match_json = await tba_api_call(cache, endpoint)
 
+        print(f"Processing event {event.key}")
+
         for match in match_json:
             matches += 1
-            match_service.from_tba(match)
+            async with AsyncSessionLocal() as session:
+                await MatchService(session).from_tba(match)
 
     return Message(message=f"Fetched {matches} matches.")

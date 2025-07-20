@@ -1,15 +1,12 @@
-from app.models.team import Team, TeamCreate
+from sqlmodel.ext.asyncio.session import AsyncSession
+
+from app.models import Team, TeamCreate
 
 from .base import BaseRepository
 
 
-class TeamRepository(BaseRepository):
+class TeamRepository(BaseRepository[Team, TeamCreate]):
 
-    def upsert(self, update_team: TeamCreate) -> Team:
-
-        team = Team.model_validate(update_team)
-        db_model = self.session.merge(team)
-        self.session.commit()
-        self.session.refresh(db_model)
-        return db_model
+    def __init__(self, session: AsyncSession):
+        super().__init__(session, Team, TeamCreate)
 

@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 from pydantic import field_validator, model_validator
+from sqlalchemy import Column, DateTime
 from sqlmodel import Field, Relationship, SQLModel
 
 from app.tba.constants import (
@@ -63,8 +64,10 @@ class MatchBase(SQLModel):
     blue_dq: str
     blue_surrogate: str
     winner: MatchWinner | None
-    time: datetime
-    predicted_time: int | None
+
+    time: datetime | None = Field(sa_column=Column(DateTime(timezone=True)))
+    actual_time: datetime | None = Field(sa_column=Column(DateTime(timezone=True)))
+    predicted_time: datetime | None = Field(sa_column=Column(DateTime(timezone=True)))
 
     # red breakdown
     red_score: int | None = None
@@ -170,6 +173,15 @@ class MatchCreate(MatchBase):
         match_dict["winner"] = match_dict.get("winning_alliance", "").lower()
 
         match_dict["match_type"] = match_dict["comp_level"]
+
+        if isinstance(match_dict["time"], int):
+            match_dict["time"] = datetime.fromtimestamp(match_dict["time"], tz=UTC)
+
+        if isinstance(match_dict["actual_time"], int):
+            match_dict["actual_time"] = datetime.fromtimestamp(match_dict["actual_time"], tz=UTC)
+
+        if isinstance(match_dict["predicted_time"], int):
+            match_dict["predicted_time"] = datetime.fromtimestamp(match_dict["predicted_time"], tz=UTC)
 
         #TODO Handle match video
         match_dict["video"] = ""

@@ -24,9 +24,6 @@ class TeamBase(SQLModel):
 
 
 class TeamCreate(TeamBase):
-    """
-    SQL table that holds team specific information from TBA
-    """
 
     @model_validator(mode="before")
     @classmethod

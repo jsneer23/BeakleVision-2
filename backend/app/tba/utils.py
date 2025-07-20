@@ -10,7 +10,7 @@ def validate_year(year: int) -> int:
 
     RETURNS YEAR FOR PYDANTIC VALIDATION PURPOSES
     """
-    if isinstance(year, int) and (year < 1992 or year >= 2026):
+    if isinstance(year, int) and (year < 1992 or year > 2026):
         raise ValueError('Year must be between 1992 and 2026')
 
     return year

@@ -1,17 +1,17 @@
 from typing import Any
 
-from sqlmodel import Session
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.models.match import MatchCreate
-from app.repositories.match import MatchRepository
+from app.models import Match, MatchCreate
+from app.repositories import MatchRepository
 
 
 class MatchService:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession):
         self.repo = MatchRepository(session)
 
-    def from_tba(self, match_dict: dict[str, Any]) -> None:
+    async def from_tba(self, match_dict: dict[str, Any]) -> None:
 
         match = MatchCreate(**match_dict)
 
-        self.repo.upsert(match)
+        await self.repo.upsert(match)
