@@ -18,7 +18,7 @@ router = APIRouter(prefix="/tba", tags=["tba"])
     #dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
 )
-async def init_teams(cache: ValkeyDep) -> Message:
+async def init_teams(session: SessionDep, cache: ValkeyDep) -> Message:
     """
     Get teams.
     """
@@ -29,8 +29,7 @@ async def init_teams(cache: ValkeyDep) -> Message:
 
 
         for team in team_json:
-            async with AsyncSessionLocal() as session:
-                await TeamService(session).from_tba(team)
+            await TeamService(session).from_tba(team)
 
     return Message(message="Fetched teams.")
 
@@ -40,7 +39,7 @@ async def init_teams(cache: ValkeyDep) -> Message:
     #dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
 )
-async def init_events(cache: ValkeyDep, year: int) -> Message:
+async def init_events(session: SessionDep, cache: ValkeyDep, year: int) -> Message:
     """
     Get Events
     """
@@ -54,8 +53,7 @@ async def init_events(cache: ValkeyDep, year: int) -> Message:
     event_json = await tba_api_call(cache, endpoint)
 
     for event in event_json:
-        async with AsyncSessionLocal() as session:
-            await EventService(session).from_tba(event)
+        await EventService(session).from_tba(event)
 
     return Message(message="Fetched events.")
 
@@ -65,32 +63,30 @@ async def init_events(cache: ValkeyDep, year: int) -> Message:
     #dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
 )
-async def init_matches(cache: ValkeyDep, year: int) -> Message:
+async def init_matches(session: SessionDep, cache: ValkeyDep, year: int) -> Message:
     """
     Get matches.
     """
 
-    async with AsyncSessionLocal() as session:
-        try:
-            events = await EventService(session).get_events(year)
-        except ValueError:
-            raise HTTPException(status_code=400,
-                                detail=f"Error fetching events."
-                                f"Try running /tba/events/{year}"
-                                " first or enter a valid year.")
+    try:
+        events = await EventService(session).get_events(year)
+        event_keys = [event.key for event in events]
+    except ValueError:
+        raise HTTPException(status_code=400,
+                            detail=f"Error fetching events. Try running /tba/events/{year}"
+                            " first or enter a valid year.")
 
     matches = 0
 
-    for event in events:
+    for event_key in event_keys:
 
-        endpoint: str = "event/" + event.key + "/matches"
+        endpoint: str = "event/" + event_key + "/matches"
         match_json = await tba_api_call(cache, endpoint)
 
-        print(f"Processing event {event.key}")
+        print(f"Processing event {event_key}")
 
         for match in match_json:
             matches += 1
-            async with AsyncSessionLocal() as session:
-                await MatchService(session).from_tba(match)
+            await MatchService(session).from_tba(match)
 
     return Message(message=f"Fetched {matches} matches.")
