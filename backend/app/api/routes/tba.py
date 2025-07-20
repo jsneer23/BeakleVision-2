@@ -3,13 +3,12 @@ from fastapi import APIRouter, HTTPException
 from app.api.deps import (  # noqa: F401
     SessionDep,
     ValkeyDep,
-    get_current_active_superuser,
+    get_current_active_superuser, # TODO require login to call these endpoints???
 )
 from app.core.db import AsyncSessionLocal
 from app.models.app import Message
 from app.services import EventService, MatchService, TeamService
-from app.tba.main import tba_api_call
-from app.tba.utils import validate_year
+from app.tba.utils import tba_api_call, validate_year
 
 router = APIRouter(prefix="/tba", tags=["tba"])
 
@@ -59,6 +58,7 @@ async def init_events(cache: ValkeyDep, year: int) -> Message:
             await EventService(session).from_tba(event)
 
     return Message(message="Fetched events.")
+
 
 @router.put(
     "/matches/{year}",

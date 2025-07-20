@@ -25,6 +25,7 @@ dependencies = [
     "aiohttp[speedups]>=3.12.13",
     "asyncpg>=0.30.0",
     "sqlalchemy[asyncio]>=2.0.41",
+    "cython>=3.1.2",
 ]
 
 [tool.uv]
