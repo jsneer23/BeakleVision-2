@@ -2,6 +2,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.models import Event, EventCreate
+from app.models.search import EventSearch
 
 from .base import BaseRepository
 
@@ -19,7 +20,15 @@ class EventRepository(BaseRepository[Event, EventCreate]):
         events = await self.session.exec(statement)
         return events.first() is not None
 
-    async def get_events_by_year(self, year: int) -> list[Event]:
+    async def search_index(self) -> list[EventSearch]:
+        """
+        Get all events.
+        """
+        statement = select(Event.name, Event.key)
+        events = await self.session.exec(statement)
+        return events.all()
+
+    async def get_by_year(self, year: int) -> list[Event]:
         """
         Get all events for a given year.
         """

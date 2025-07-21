@@ -1,21 +1,23 @@
 from fastapi import APIRouter, Depends
 from pydantic.networks import EmailStr
 
-from app.api.deps import get_current_active_superuser
+from app.api.deps import SessionDep, get_current_active_superuser
+from app.models import SearchIndex
 from app.models.app import Message
+from app.services import SearchService
 from app.utils import generate_test_email, send_email
 
 router = APIRouter(prefix="/utils", tags=["utils"])
 
-
-# @router.get("search_index/",
-#             status_code=200)
-# def search_index() -> SearchIndex:
-#     """
-#     Get the search index.
-#     """
-#     return SearchIndex()
-
+@router.get(
+    "/search_index/",
+    status_code=201,
+    response_model=SearchIndex,
+)
+async def search_index(session: SessionDep) -> SearchIndex:
+    print("here")
+    service = SearchService(session)
+    return await service.search_index()
 
 @router.post(
     "/test-email/",

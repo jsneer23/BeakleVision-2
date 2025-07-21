@@ -69,13 +69,6 @@ class EventCreate(EventBase):
         return v+1
 
 
-
-class EventSearch(EventBase):
-
-    name: str
-    key: str
-
-
 class Event(EventBase, table=True):
     """
     SQL table that holds event specific information from TBA.
