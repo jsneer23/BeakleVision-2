@@ -39,18 +39,11 @@ class EventCreate(EventBase):
 
         if isinstance(event_dict['district'], dict):
             event_dict['district'] = event_dict.get('district', {}).get('abbreviation', None)
-        return event_dict
 
-    @field_validator("week", mode="before")
-    @classmethod
-    def validate_week(cls, v: int | None, info: ValidationInfo) -> int:
-        if info.data['event_type'].is_champs:
-            return 8
-        if info.data['event_type'].is_offseason:
-            return 9
-        if v is None:
-            raise ValueError("Event week is None for a non championship event, this should not happen.")
-        return v+1
+        if not isinstance(event_dict['week'], int):
+            event_dict['week'] = -1
+
+        return event_dict
 
     @field_validator("state_prov", mode="before")
     @classmethod
@@ -61,6 +54,26 @@ class EventCreate(EventBase):
     @classmethod
     def validate_district(cls, v: str | None) -> District:
         return get_district(v)
+
+    @field_validator("week")
+    @classmethod
+    def validate_week(cls, v: int | None, info: ValidationInfo) -> int:
+
+        if EventType(info.data['event_type']).is_champs:
+            return 8
+        if EventType(info.data['event_type']).is_offseason:
+            return 9
+        if v is -1:
+            raise ValueError("Event week is None for a non championship event, this should not happen.")
+
+        return v+1
+
+
+
+class EventSearch(EventBase):
+
+    name: str
+    key: str
 
 
 class Event(EventBase, table=True):

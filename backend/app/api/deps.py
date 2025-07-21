@@ -10,7 +10,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core import security
 from app.core.config import settings
-from app.core.db import engine
+from app.core.db import AsyncSessionLocal
 from app.core.valkey import ValkeyCache, valkey_cache
 from app.models.app import TokenPayload, User
 
@@ -24,7 +24,7 @@ def get_valkey() -> Generator[ValkeyCache, None, None]:
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    async with AsyncSession(engine) as session:
+    async with AsyncSessionLocal() as session:
         yield session
 
 

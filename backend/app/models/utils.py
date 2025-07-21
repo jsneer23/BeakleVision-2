@@ -11,7 +11,7 @@ def strip_string(value: str) -> str | None:
 
 def get_state_prov(state: str | None) -> str:
 
-    if state is None:
+    if not isinstance(state, str):
         return ""
 
     state = state.strip().upper()
@@ -24,7 +24,7 @@ def get_state_prov(state: str | None) -> str:
 
 def get_district(district: str | None) -> str:
 
-    if district is None:
+    if not isinstance(district, str):
         return ""
 
     district = district.strip().lower()

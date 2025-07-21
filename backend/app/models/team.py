@@ -38,10 +38,10 @@ class TeamCreate(TeamBase):
         return StateProv(fixed)
 
 
-class TeamName(TeamBase):
+class TeamSearch(TeamBase):
 
     number: str
-    name: str
+    nickname: str
 
 
 class Team(TeamBase, table=True):

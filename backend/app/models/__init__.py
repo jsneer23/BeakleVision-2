@@ -6,10 +6,12 @@ from .year import YearStats, YearStatsCreate
 __all__ = [
     "Event",
     "EventCreate",
+    "EventSearch",
     "Match",
     "MatchCreate",
     "Team",
     "TeamCreate",
+    "TeamSearch",
     "TeamYearStats",
     "YearStats",
     "YearStatsCreate"

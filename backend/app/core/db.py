@@ -10,6 +10,7 @@ from app.models.app import User, UserCreate
 from app.services.year import YearStatsService
 
 engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URI))
+
 AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
 # make sure all SQLModel models are imported (app.models) before initializing DB

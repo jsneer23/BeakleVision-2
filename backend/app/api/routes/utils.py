@@ -8,6 +8,15 @@ from app.utils import generate_test_email, send_email
 router = APIRouter(prefix="/utils", tags=["utils"])
 
 
+# @router.get("search_index/",
+#             status_code=200)
+# def search_index() -> SearchIndex:
+#     """
+#     Get the search index.
+#     """
+#     return SearchIndex()
+
+
 @router.post(
     "/test-email/",
     dependencies=[Depends(get_current_active_superuser)],
