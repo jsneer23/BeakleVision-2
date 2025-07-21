@@ -1,7 +1,13 @@
-# Full Stack FastAPI Template
+# BeakleVision - An FRC Scouting Application
 
 <a href="https://github.com/fastapi/full-stack-fastapi-template/actions?query=workflow%3ATest" target="_blank"><img src="https://github.com/fastapi/full-stack-fastapi-template/workflows/Test/badge.svg" alt="Test"></a>
 <a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/full-stack-fastapi-template" target="_blank"><img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/full-stack-fastapi-template.svg" alt="Coverage"></a>
+
+## Overview
+
+BeakleVision is a project by [FRC 5507](https://sites.google.com/sfusd.edu/gwhsrobotics/team/about-us) to improve our scouting, match strategy, and picklisting processes named after our very own eagle eyed mascot, Beakle.
+
+In the past our scouting team has struggled with missed shifts, mishandled data, data entry backlogs, scouter inaccuracy, scouter fatigue and more. We wanted to develop a streamlined scouting system that addressed all of these problems.
 
 ## Technology Stack and Features
 
@@ -26,52 +32,18 @@ This project was initially forked from the [Full StackAPI Template](https://gith
 - 🚢 Deployment instructions using Docker Compose, including how to set up a frontend Traefik proxy to handle automatic HTTPS certificates.
 - 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
 
-
 ### Configure
 
 Remove `.dist` from the `.env` file. You can then update configs in the `.env` files to customize your configurations.
 
-Before deploying it, make sure you change at least the values for:
-
-- `SECRET_KEY`
-- `FIRST_SUPERUSER_PASSWORD`
-- `POSTGRES_PASSWORD`
-
-You can (and should) pass these as environment variables from secrets.
-
-Read the [deployment.md](./deployment.md) docs for more details.
-
-### Generate Secret Keys
-
-Some environment variables in the `.env` file have a default value of `changethis`.
-
-You have to change them with a secret key, to generate secret keys you can run the following command:
-
-```bash
-python -c "import secrets; print(secrets.token_urlsafe(32))"
-```
-
-Copy the content and use that as password / secret key. And run that again to generate another secure key.
-
-## Backend Development
-
-Backend docs: [backend/README.md](./backend/README.md).
-
-## Frontend Development
-
-Frontend docs: [frontend/README.md](./frontend/README.md).
-
-## Deployment
-
-Deployment docs: [deployment.md](./deployment.md).
-
 ## Development
 
-General development docs: [development.md](./development.md).
+General development docs are located in [development.md](./development.md). This includes using Docker Compose, custom local domains, `.env` configurations, etc.
 
-This includes using Docker Compose, custom local domains, `.env` configurations, etc.
+Frontend specific docs can be found in [frontend/README.md](./frontend/README.md) while backend docs live in [backend/README.md](./backend/README.md).
 
 For bootstrapping data to your local development evnironment see [bootstrapping.md](./boostrapping.md).
+
 
 ## How To Use It - Alternative With Copier
 
@@ -132,6 +104,32 @@ The input variables, with their default values (some auto generated) are:
 - `emails_from_email`: (default: `"info@example.com"`) The email account to send emails from, you can set it later in .env.
 - `postgres_password`: (default: `"changethis"`) The password for the PostgreSQL database, stored in .env, you can generate one with the method above.
 - `sentry_dsn`: (default: "") The DSN for Sentry, if you are using it, you can set it later in .env.
+
+
+## Deployment
+
+Before deploying it, make sure you change at least the values for:
+
+- `SECRET_KEY`
+- `FIRST_SUPERUSER_PASSWORD`
+- `POSTGRES_PASSWORD`
+
+You can (and should) pass these as environment variables from secrets.
+
+Read the [deployment.md](./deployment.md) docs for more details.
+
+### Generate Secret Keys
+
+Some environment variables in the `.env` file have a default value of `changethis`.
+
+You have to change them with a secret key, to generate secret keys you can run the following command:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Copy the content and use that as password / secret key. And run that again to generate another secure key.
+
 
 ## Release Notes
 

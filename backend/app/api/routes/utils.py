@@ -15,7 +15,6 @@ router = APIRouter(prefix="/utils", tags=["utils"])
     response_model=SearchIndex,
 )
 async def search_index(session: SessionDep) -> SearchIndex:
-    print("here")
     service = SearchService(session)
     return await service.search_index()
 
