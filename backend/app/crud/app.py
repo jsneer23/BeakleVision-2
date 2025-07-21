@@ -34,8 +34,8 @@ async def update_user(*, session: AsyncSession, db_user: User, user_in: UserUpda
 
 async def get_user_by_email(*, session: AsyncSession, email: str) -> User | None:
     statement = select(User).where(User.email == email)
-    session_user = await session.exec(statement).first()
-    return session_user
+    session_user = await session.exec(statement)
+    return session_user.first()
 
 
 async def authenticate(*, session: AsyncSession, email: str, password: str) -> User | None:
