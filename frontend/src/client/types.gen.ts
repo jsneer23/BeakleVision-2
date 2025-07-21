@@ -9,6 +9,11 @@ export type Body_login_login_access_token = {
   client_secret?: string | null
 }
 
+export type EventSearch = {
+  name: string
+  key: string
+}
+
 export type HTTPValidationError = {
   detail?: Array<ValidationError>
 }
@@ -49,6 +54,16 @@ export type PrivateUserCreate = {
   password: string
   full_name: string
   is_verified?: boolean
+}
+
+export type SearchIndex = {
+  events?: Array<EventSearch>
+  teams?: Array<TeamSearch>
+}
+
+export type TeamSearch = {
+  number: number
+  nickname: string
 }
 
 export type Token = {
@@ -171,6 +186,20 @@ export type PrivateCreateUserData = {
 
 export type PrivateCreateUserResponse = UserPublic
 
+export type TbaInitTeamsResponse = Message
+
+export type TbaInitEventsData = {
+  year: number
+}
+
+export type TbaInitEventsResponse = Message
+
+export type TbaInitMatchesData = {
+  year: number
+}
+
+export type TbaInitMatchesResponse = Message
+
 export type UsersReadUsersData = {
   limit?: number
   skip?: number
@@ -224,6 +253,8 @@ export type UsersDeleteUserData = {
 }
 
 export type UsersDeleteUserResponse = Message
+
+export type UtilsSearchIndexResponse = SearchIndex
 
 export type UtilsTestEmailData = {
   emailTo: string

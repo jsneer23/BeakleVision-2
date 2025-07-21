@@ -25,6 +25,11 @@ import type {
   LoginRecoverPasswordHtmlContentResponse,
   PrivateCreateUserData,
   PrivateCreateUserResponse,
+  TbaInitTeamsResponse,
+  TbaInitEventsData,
+  TbaInitEventsResponse,
+  TbaInitMatchesData,
+  TbaInitMatchesResponse,
   UsersReadUsersData,
   UsersReadUsersResponse,
   UsersCreateUserData,
@@ -43,6 +48,7 @@ import type {
   UsersUpdateUserResponse,
   UsersDeleteUserData,
   UsersDeleteUserResponse,
+  UtilsSearchIndexResponse,
   UtilsTestEmailData,
   UtilsTestEmailResponse,
   UtilsHealthCheckResponse,
@@ -298,6 +304,67 @@ export class PrivateService {
   }
 }
 
+export class TbaService {
+  /**
+   * Init Teams
+   * Get teams from The Blue Alliance (TBA) API for data initialization.
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static initTeams(): CancelablePromise<TbaInitTeamsResponse> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/v1/tba/teams/",
+    })
+  }
+
+  /**
+   * Init Events
+   * Get Events for {year} from The Blue Alliance (TBA) API for data initialization.
+   * @param data The data for the request.
+   * @param data.year
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static initEvents(
+    data: TbaInitEventsData,
+  ): CancelablePromise<TbaInitEventsResponse> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/v1/tba/events/{year}",
+      path: {
+        year: data.year,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Init Matches
+   * Get matches.
+   * @param data The data for the request.
+   * @param data.year
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static initMatches(
+    data: TbaInitMatchesData,
+  ): CancelablePromise<TbaInitMatchesResponse> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/v1/tba/matches/{year}",
+      path: {
+        year: data.year,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
 export class UsersService {
   /**
    * Read Users
@@ -512,6 +579,18 @@ export class UsersService {
 }
 
 export class UtilsService {
+  /**
+   * Search Index
+   * @returns SearchIndex Successful Response
+   * @throws ApiError
+   */
+  public static searchIndex(): CancelablePromise<UtilsSearchIndexResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/utils/search_index/",
+    })
+  }
+
   /**
    * Test Email
    * Test emails.
