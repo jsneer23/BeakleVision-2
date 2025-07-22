@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 
-import { Event, Team } from '~/api/tba/read';
+import { Event, Team } from '@/client';
 import { removeNonNumeric } from '@/utils';
 
 const TeamLink = React.forwardRef<
@@ -14,7 +14,7 @@ const TeamLink = React.forwardRef<
   const teamNumber =
     typeof teamOrKey === 'string'
       ? removeNonNumeric(teamOrKey)
-      : teamOrKey.team_number;
+      : teamOrKey.number;
 
   const yearSuffix =
     year === undefined ? '' : year === 0 ? 'history' : year.toString();
@@ -31,7 +31,7 @@ const EventLink = React.forwardRef<
   }>
 >(({ eventOrKey, ...props }, ref) => {
   const eventKey = typeof eventOrKey === 'string' ? eventOrKey : eventOrKey.key;
-  return <Link to={`/event/${eventKey}`} {...props} ref={ref} />;
+  return <Link to={`/event/${eventKey}`} params={{ eventKey }} {...props} ref={ref} />;
 });
 EventLink.displayName = 'EventLink';
 

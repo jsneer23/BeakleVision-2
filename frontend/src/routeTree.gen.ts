@@ -17,7 +17,11 @@ import { Route as ResetPasswordImport } from './routes/reset-password'
 import { Route as RecoverPasswordImport } from './routes/recover-password'
 import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
+import { Route as TeamIndexImport } from './routes/team/index'
+import { Route as EventIndexImport } from './routes/event/index'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
+import { Route as TeamTeamNumberImport } from './routes/team/$teamNumber'
+import { Route as EventEventKeyImport } from './routes/event/$eventKey'
 import { Route as LayoutSettingsImport } from './routes/_layout/settings'
 import { Route as LayoutItemsImport } from './routes/_layout/items'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
@@ -54,9 +58,29 @@ const LayoutRoute = LayoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const TeamIndexRoute = TeamIndexImport.update({
+  path: '/team/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EventIndexRoute = EventIndexImport.update({
+  path: '/event/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const LayoutIndexRoute = LayoutIndexImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
+} as any)
+
+const TeamTeamNumberRoute = TeamTeamNumberImport.update({
+  path: '/team/$teamNumber',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EventEventKeyRoute = EventEventKeyImport.update({
+  path: '/event/$eventKey',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const LayoutSettingsRoute = LayoutSettingsImport.update({
@@ -114,9 +138,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsImport
       parentRoute: typeof LayoutImport
     }
+    '/event/$eventKey': {
+      preLoaderRoute: typeof EventEventKeyImport
+      parentRoute: typeof rootRoute
+    }
+    '/team/$teamNumber': {
+      preLoaderRoute: typeof TeamTeamNumberImport
+      parentRoute: typeof rootRoute
+    }
     '/_layout/': {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
+    }
+    '/event/': {
+      preLoaderRoute: typeof EventIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/team/': {
+      preLoaderRoute: typeof TeamIndexImport
+      parentRoute: typeof rootRoute
     }
   }
 }
@@ -135,6 +175,10 @@ export const routeTree = rootRoute.addChildren([
   ResetPasswordRoute,
   SignupRoute,
   TeamsRoute,
+  EventEventKeyRoute,
+  TeamTeamNumberRoute,
+  EventIndexRoute,
+  TeamIndexRoute,
 ])
 
 /* prettier-ignore-end */

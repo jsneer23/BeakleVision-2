@@ -1,6 +1,6 @@
 from typing import Generic, TypeVar
 
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 ModelT = TypeVar('ModelT', bound=SQLModel)
@@ -33,4 +33,9 @@ class BaseRepository(Generic[ModelT, CreateT]):
         await self.session.commit()
 
     async def get_by_key(self, key: str) -> ModelT | None:
-        return await self.session.get(self.model_type, key=key)
+        """Retrieve a model instance by its key."""
+        if key == "":
+            return None
+        statement = select(self.model_type).where(self.model_type.key == key)
+        result = await self.session.exec(statement)
+        return result.first()

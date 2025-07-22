@@ -1,14 +1,14 @@
-import { SearchIndex, getSearchIndex } from '~/api/tba/read';
+import { SearchIndex, UtilsService } from '@/client';
 import { SearchDataProvider } from '@/lib/search/api';
 
 export class ProdAPIProvider implements SearchDataProvider {
   async provide(): Promise<SearchIndex> {
-    const searchIndex = await getSearchIndex({});
+    const searchIndex = await UtilsService.searchIndex();
 
-    if (searchIndex.data === undefined) {
+    if (searchIndex === undefined) {
       return Promise.reject(new Error('Failed to fetch search index'));
     }
 
-    return searchIndex.data;
+    return searchIndex
   }
 }

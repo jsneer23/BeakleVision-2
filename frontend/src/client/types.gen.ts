@@ -9,10 +9,60 @@ export type Body_login_login_access_token = {
   client_secret?: string | null
 }
 
+/**
+ * An enumeration for FRC districts.
+ */
+export type District =
+  | "North Carolina"
+  | "Texas"
+  | "Indiana"
+  | "Mid-Atlantic"
+  | "Chesapeake"
+  | "Michigan"
+  | "South Carolina"
+  | "Peachtree"
+  | "Pacific Northwest"
+  | "Israel"
+  | "Ontario"
+  | "New England"
+  | ""
+
+/**
+ * SQL table that holds event specific information from TBA.
+ */
+export type Event = {
+  year: number
+  key: string
+  name: string
+  country: string | null
+  state_prov: StateProv
+  city: string | null
+  district: District
+  start_date: string
+  end_date: string
+  event_type: EventType
+  week: number
+}
+
 export type EventSearch = {
   name: string
   key: string
 }
+
+/**
+ * An enumeration for event type.
+ *
+ * Members:
+ * INVALID: The event is invalid for some reason.
+ * REGIONAL: The event is a traditional regional event.
+ * DISTRICT: The event is a district qualifying event.
+ * DISTRICT_CMP: The event is a distict championship event.
+ * CMP_DIV: The event is a division at the world championship.
+ * EINSTEIN: The event is the Einstein final at world championship.
+ * DISTRICT_CMP_DIV: The event is a district championship division.
+ * OFFSEASON: The event is an offseason event.
+ */
+export type EventType = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 99
 
 export type HTTPValidationError = {
   detail?: Array<ValidationError>
@@ -59,6 +109,92 @@ export type PrivateUserCreate = {
 export type SearchIndex = {
   events?: Array<EventSearch>
   teams?: Array<TeamSearch>
+}
+
+/**
+ * An enumeration for US states and Canadian provinces.
+ */
+export type StateProv =
+  | "Alabama"
+  | "Alaska"
+  | "American Samoa"
+  | "Arizona"
+  | "Arkansas"
+  | "California"
+  | "Colorado"
+  | "Connecticut"
+  | "Delaware"
+  | "District of Columbia"
+  | "Florida"
+  | "Georgia"
+  | "Guam"
+  | "Hawaii"
+  | "Idaho"
+  | "Illinois"
+  | "Indiana"
+  | "Iowa"
+  | "Kansas"
+  | "Kentucky"
+  | "Louisiana"
+  | "Maine"
+  | "Maryland"
+  | "Massachusetts"
+  | "Michigan"
+  | "Minnesota"
+  | "Mississippi"
+  | "Missouri"
+  | "Montana"
+  | "Nebraska"
+  | "Nevada"
+  | "New Hampshire"
+  | "New Jersey"
+  | "New Mexico"
+  | "New York"
+  | "North Carolina"
+  | "North Dakota"
+  | "Northern Mariana Islands"
+  | "Ohio"
+  | "Oklahoma"
+  | "Oregon"
+  | "Pennsylvania"
+  | "Puerto Rico"
+  | "Rhode Island"
+  | "South Carolina"
+  | "South Dakota"
+  | "Tennessee"
+  | "Texas"
+  | "Utah"
+  | "Vermont"
+  | "Virgin Islands"
+  | "Virginia"
+  | "Washington"
+  | "West Virginia"
+  | "Wisconsin"
+  | "Wyoming"
+  | "Newfoundland"
+  | "Prince Edward Island"
+  | "Nova Scotia"
+  | "New Brunswick"
+  | "Québec"
+  | "Ontario"
+  | "Manitoba"
+  | "Saskatchewan"
+  | "Alberta"
+  | "British Columbia"
+  | "Yukon"
+  | "Northwest Territories"
+  | "Nunavut"
+  | ""
+
+export type Team = {
+  key: string
+  number: number
+  nickname: string
+  rookie_year: number | null
+  country: string | null
+  state_prov: StateProv
+  city: string | null
+  district?: District
 }
 
 export type TeamSearch = {
@@ -121,6 +257,12 @@ export type ValidationError = {
   msg: string
   type: string
 }
+
+export type EventEventData = {
+  key: string
+}
+
+export type EventEventResponse = Event
 
 export type ItemsReadItemsData = {
   limit?: number
@@ -199,6 +341,12 @@ export type TbaInitMatchesData = {
 }
 
 export type TbaInitMatchesResponse = Message
+
+export type TeamTeamsData = {
+  number: number
+}
+
+export type TeamTeamsResponse = Team
 
 export type UsersReadUsersData = {
   limit?: number

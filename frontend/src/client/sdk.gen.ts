@@ -4,6 +4,8 @@ import type { CancelablePromise } from "./core/CancelablePromise"
 import { OpenAPI } from "./core/OpenAPI"
 import { request as __request } from "./core/request"
 import type {
+  EventEventData,
+  EventEventResponse,
   ItemsReadItemsData,
   ItemsReadItemsResponse,
   ItemsCreateItemData,
@@ -30,6 +32,8 @@ import type {
   TbaInitEventsResponse,
   TbaInitMatchesData,
   TbaInitMatchesResponse,
+  TeamTeamsData,
+  TeamTeamsResponse,
   UsersReadUsersData,
   UsersReadUsersResponse,
   UsersCreateUserData,
@@ -53,6 +57,30 @@ import type {
   UtilsTestEmailResponse,
   UtilsHealthCheckResponse,
 } from "./types.gen"
+
+export class EventService {
+  /**
+   * Event
+   * @param data The data for the request.
+   * @param data.key
+   * @returns Event Successful Response
+   * @throws ApiError
+   */
+  public static event(
+    data: EventEventData,
+  ): CancelablePromise<EventEventResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/event/{key}",
+      path: {
+        key: data.key,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
 
 export class ItemsService {
   /**
@@ -357,6 +385,30 @@ export class TbaService {
       url: "/api/v1/tba/matches/{year}",
       path: {
         year: data.year,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class TeamService {
+  /**
+   * Teams
+   * @param data The data for the request.
+   * @param data.number
+   * @returns Team Successful Response
+   * @throws ApiError
+   */
+  public static teams(
+    data: TeamTeamsData,
+  ): CancelablePromise<TeamTeamsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/team/{number}",
+      path: {
+        number: data.number,
       },
       errors: {
         422: "Validation Error",

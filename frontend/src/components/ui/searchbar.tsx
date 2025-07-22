@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 
-import { SearchIndex } from '~/api/tba/read';
+import { SearchIndex } from '@/client';
 import { EventLink, TeamLink } from '@/components/ui/links';
 import {
   Command,
@@ -112,15 +112,18 @@ export default function Searchbar() {
           <CommandGroup heading="Teams">
             {searchResults.teams.map((team) => (
               <CommandItem
-                key={team.key}
+                key={team.number}
                 onSelect={() => {
-                  void navigate(`/team/${team.key.substring(3)}`);
+                  void navigate({
+                    to: `/team/$teamNumber`,
+                    params: { teamNumber: team.number.toString() }
+                   });
                   setIsOpen(false);
                 }}
                 asChild
               >
-                <TeamLink teamOrKey={team.key}>
-                  {team.key.substring(3)} - {team.nickname}
+                <TeamLink teamOrKey={team.number}>
+                  {team.number} - {team.nickname}
                 </TeamLink>
               </CommandItem>
             ))}
@@ -133,7 +136,10 @@ export default function Searchbar() {
               <CommandItem
                 key={event.key}
                 onSelect={() => {
-                  void navigate(`/event/${event.key}`);
+                  void navigate({
+                    to: `/event/$eventKey`,
+                    params: { eventKey: event.key },
+                });
                   setIsOpen(false);
                 }}
               >
@@ -147,8 +153,8 @@ export default function Searchbar() {
         )}
 
         {searchResults === null ||
-          (searchResults.teams.length === 0 &&
-            searchResults.events.length === 0 && (
+          ((searchResults?.teams?.length === 0 &&
+            searchResults?.events?.length === 0) && (
               <CommandEmpty>No Results Found</CommandEmpty>
             ))}
       </CommandList>

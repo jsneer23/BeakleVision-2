@@ -4,7 +4,6 @@ import {
   redirect,
 } from "@tanstack/react-router"
 import { Box, Heading, Text, Button } from "@chakra-ui/react"
-import { Nav } from "@/components/Common/NewNav"
 
 export const Route = createFileRoute("/teams")({
   component: TestPage,

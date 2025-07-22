@@ -1,10 +1,10 @@
 import fuzzysort from 'fuzzysort';
 
-import { SearchIndex } from '~/api/tba/read';
+import { SearchIndex } from '@/client';
 import { SearchDataFilterer } from '@/lib/search/api';
 
-type SearchableTeam = SearchIndex['teams'][number];
-type SearchableEvent = SearchIndex['events'][number];
+type SearchableTeam = NonNullable<SearchIndex['teams']>[number];
+type SearchableEvent = NonNullable<SearchIndex['events']>[number];
 
 function searchTeams(
   teams: SearchableTeam[],
@@ -13,7 +13,7 @@ function searchTeams(
 ): SearchableTeam[] {
   const results = fuzzysort.go(query, teams, {
     limit,
-    keys: ['key', 'nickname'],
+    keys: ['number', 'nickname'],
     threshold: 0.5,
   });
 
@@ -49,8 +49,8 @@ function searchEvents(
 export default class FuzzysortFilterer implements SearchDataFilterer {
   filter(data: SearchIndex, query: string): SearchIndex {
     return {
-      teams: searchTeams(data.teams, query, 5),
-      events: searchEvents(data.events, query, 10),
+      teams: searchTeams(data.teams ?? [], query, 5),
+      events: searchEvents(data.events ?? [], query, 10),
     };
   }
 }
