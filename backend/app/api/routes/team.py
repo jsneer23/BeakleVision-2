@@ -10,6 +10,6 @@ router = APIRouter(prefix="/team", tags=["team"])
     "/{number}",
     status_code=200,
 )
-async def teams(number: int, session: SessionDep) -> Team:
+async def get_team_by_number(number: int, session: SessionDep) -> Team:
     service = TeamService(session)
     return await service.get_by_number(number)

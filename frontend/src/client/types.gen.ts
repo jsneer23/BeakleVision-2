@@ -342,11 +342,11 @@ export type TbaInitMatchesData = {
 
 export type TbaInitMatchesResponse = Message
 
-export type TeamTeamsData = {
+export type TeamGetTeamByNumberData = {
   number: number
 }
 
-export type TeamTeamsResponse = Team
+export type TeamGetTeamByNumberResponse = Team
 
 export type UsersReadUsersData = {
   limit?: number

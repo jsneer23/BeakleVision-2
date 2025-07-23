@@ -32,8 +32,8 @@ import type {
   TbaInitEventsResponse,
   TbaInitMatchesData,
   TbaInitMatchesResponse,
-  TeamTeamsData,
-  TeamTeamsResponse,
+  TeamGetTeamByNumberData,
+  TeamGetTeamByNumberResponse,
   UsersReadUsersData,
   UsersReadUsersResponse,
   UsersCreateUserData,
@@ -395,15 +395,15 @@ export class TbaService {
 
 export class TeamService {
   /**
-   * Teams
+   * Get Team By Number
    * @param data The data for the request.
    * @param data.number
    * @returns Team Successful Response
    * @throws ApiError
    */
-  public static teams(
-    data: TeamTeamsData,
-  ): CancelablePromise<TeamTeamsResponse> {
+  public static getTeamByNumber(
+    data: TeamGetTeamByNumberData,
+  ): CancelablePromise<TeamGetTeamByNumberResponse> {
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/v1/team/{number}",

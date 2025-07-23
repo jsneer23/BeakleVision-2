@@ -20,11 +20,11 @@ import { Route as LayoutImport } from './routes/_layout'
 import { Route as TeamIndexImport } from './routes/team/index'
 import { Route as EventIndexImport } from './routes/event/index'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as TeamTeamNumberImport } from './routes/team/$teamNumber'
 import { Route as EventEventKeyImport } from './routes/event/$eventKey'
 import { Route as LayoutSettingsImport } from './routes/_layout/settings'
 import { Route as LayoutItemsImport } from './routes/_layout/items'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
+import { Route as TeamTeamNumberYearImport } from './routes/team/$teamNumber.{-$year}'
 
 // Create/Update Routes
 
@@ -73,11 +73,6 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const TeamTeamNumberRoute = TeamTeamNumberImport.update({
-  path: '/team/$teamNumber',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const EventEventKeyRoute = EventEventKeyImport.update({
   path: '/event/$eventKey',
   getParentRoute: () => rootRoute,
@@ -96,6 +91,11 @@ const LayoutItemsRoute = LayoutItemsImport.update({
 const LayoutAdminRoute = LayoutAdminImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
+} as any)
+
+const TeamTeamNumberYearRoute = TeamTeamNumberYearImport.update({
+  path: '/team/$teamNumber/{-$year}',
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -142,10 +142,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventEventKeyImport
       parentRoute: typeof rootRoute
     }
-    '/team/$teamNumber': {
-      preLoaderRoute: typeof TeamTeamNumberImport
-      parentRoute: typeof rootRoute
-    }
     '/_layout/': {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
@@ -156,6 +152,10 @@ declare module '@tanstack/react-router' {
     }
     '/team/': {
       preLoaderRoute: typeof TeamIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/team/$teamNumber/{-$year}': {
+      preLoaderRoute: typeof TeamTeamNumberYearImport
       parentRoute: typeof rootRoute
     }
   }
@@ -176,9 +176,9 @@ export const routeTree = rootRoute.addChildren([
   SignupRoute,
   TeamsRoute,
   EventEventKeyRoute,
-  TeamTeamNumberRoute,
   EventIndexRoute,
   TeamIndexRoute,
+  TeamTeamNumberYearRoute,
 ])
 
 /* prettier-ignore-end */

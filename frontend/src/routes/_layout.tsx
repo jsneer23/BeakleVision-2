@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_layout")({
 function Layout() {
   return (
     <>
-      <Nav />
+    <Nav />
       <div className="container mx-auto px-4 pt-14 text-sm">
         <div className="bg-background">
           <Flex direction="column" h="100vh">
