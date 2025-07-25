@@ -2,8 +2,13 @@ from fastapi import HTTPException
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.valkey import ValkeyCache
-from app.models import Event, EventCreate, MatchCreate, TeamCreate
-from app.repositories import EventRepository, MatchRepository, TeamRepository
+from app.models import Event, EventCreate, MatchCreate, TeamCreate, TeamEventCreate
+from app.repositories import (
+    EventRepository,
+    MatchRepository,
+    TeamEventRepository,
+    TeamRepository,
+)
 from app.tba.utils import tba_api_call, validate_year
 
 
@@ -13,6 +18,7 @@ class TBAImportService:
         self.event = EventRepository(session)
         self.match = MatchRepository(session)
         self.team = TeamRepository(session)
+        self.team_event = TeamEventRepository(session)
         self.cache = cache
 
     async def _get_events(self, year: int) -> list[Event]:
@@ -20,18 +26,20 @@ class TBAImportService:
         if not await self.event.year_exists(year):
             raise ValueError("Events for this year have not been loaded.")
 
-        return await self.event.get_events_by_year(year)
+        return await self.event.get_by_year(year)
 
-    async def import_teams(self) -> None:
+    async def _import_team_events(self, event_key: str, year: int) -> None:
 
-        for i in range(30):
-            endpoint: str = "teams/" + str(i)
-            team_json = await tba_api_call(self.cache, endpoint)
+        endpoint: str = "event/" + event_key + "/teams/keys"
+        team_keys = await tba_api_call(self.cache, endpoint)
 
-
-            for team_dict in team_json:
-                team_model = TeamCreate(**team_dict)
-                await self.team.upsert(team_model)
+        for team_key in team_keys:
+            team_event = TeamEventCreate(
+                team_key=team_key,
+                event_key=event_key,
+                year=year
+            )
+            await self.team_event.upsert(team_event)
 
     async def import_events(self, year: int) -> None:
 
@@ -48,6 +56,18 @@ class TBAImportService:
             if event_dict['event_type'] < 100:
                 event_model = EventCreate(**event_dict)
                 await self.event.upsert(event_model)
+                await self._import_team_events(event_dict['key'], year)
+
+    async def import_teams(self) -> None:
+
+        for i in range(30):
+            endpoint: str = "teams/" + str(i)
+            team_json = await tba_api_call(self.cache, endpoint)
+
+
+            for team_dict in team_json:
+                team_model = TeamCreate(**team_dict)
+                await self.team.upsert(team_model)
 
     async def import_matches(self, year: int) -> int:
 

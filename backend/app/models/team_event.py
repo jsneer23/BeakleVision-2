@@ -12,14 +12,12 @@ if TYPE_CHECKING:
 
 class TeamEventBase(SQLModel):
 
-    team_key: str
-    event_key: str
+    team_key: Annotated[str, AfterValidator(strip_string)]
+    event_key: Annotated[str, AfterValidator(strip_string)]
     year: int
 
 class TeamEventCreate(TeamEventBase):
-
-    team_key: Annotated[str, AfterValidator(strip_string)]
-    event_key: Annotated[str, AfterValidator(strip_string)]
+    pass
 
 class TeamEvent(TeamEventBase, table=True):
     """
@@ -30,5 +28,5 @@ class TeamEvent(TeamEventBase, table=True):
     team_key: str = Field(foreign_key="team.key")
     event_key: str = Field(foreign_key="event.key")
 
-    event: list["Event"] = Relationship(back_populates="teams") #4
+    event: "Event" = Relationship(back_populates="teams") #4
     team: "Team" = Relationship(back_populates="events") #5

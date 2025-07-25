@@ -90,6 +90,126 @@ export type ItemUpdate = {
   description?: string | null
 }
 
+/**
+ * SQL table that holds match information from TBA
+ */
+export type Match = {
+  year: number
+  event_key: string
+  key: string
+  match_type: MatchType
+  set_number: number
+  match_number: number
+  status: MatchStatus
+  video: string | null
+  red_1: string
+  red_2: string
+  red_3: string | null
+  red_dq: string
+  red_surrogate: string
+  blue_1: string
+  blue_2: string
+  blue_3: string | null
+  blue_dq: string
+  blue_surrogate: string
+  winner: MatchWinner | null
+  time: string | null
+  actual_time: string | null
+  predicted_time: string | null
+  red_score?: number | null
+  red_no_foul_points?: number | null
+  red_foul_points?: number | null
+  red_auto_points?: number | null
+  red_teleop_points?: number | null
+  red_endgame_points?: number | null
+  red_endgame_1?: number | null
+  red_endgame_2?: number | null
+  red_endgame_3?: number | null
+  red_rp_1?: boolean | null
+  red_rp_2?: boolean | null
+  red_rp_3?: boolean | null
+  red_comp_1?: number | null
+  red_comp_2?: number | null
+  red_comp_3?: number | null
+  red_comp_4?: number | null
+  red_comp_5?: number | null
+  red_comp_6?: number | null
+  red_comp_7?: number | null
+  red_comp_8?: number | null
+  red_comp_9?: number | null
+  red_comp_10?: number | null
+  red_comp_11?: number | null
+  red_comp_12?: number | null
+  red_comp_13?: number | null
+  red_comp_14?: number | null
+  red_comp_15?: number | null
+  red_comp_16?: number | null
+  red_comp_17?: number | null
+  red_comp_18?: number | null
+  blue_score?: number | null
+  blue_no_foul_points?: number | null
+  blue_foul_points?: number | null
+  blue_auto_points?: number | null
+  blue_teleop_points?: number | null
+  blue_endgame_points?: number | null
+  blue_endgame_1?: number | null
+  blue_endgame_2?: number | null
+  blue_endgame_3?: number | null
+  blue_rp_1?: boolean | null
+  blue_rp_2?: boolean | null
+  blue_rp_3?: boolean | null
+  blue_comp_1?: number | null
+  blue_comp_2?: number | null
+  blue_comp_3?: number | null
+  blue_comp_4?: number | null
+  blue_comp_5?: number | null
+  blue_comp_6?: number | null
+  blue_comp_7?: number | null
+  blue_comp_8?: number | null
+  blue_comp_9?: number | null
+  blue_comp_10?: number | null
+  blue_comp_11?: number | null
+  blue_comp_12?: number | null
+  blue_comp_13?: number | null
+  blue_comp_14?: number | null
+  blue_comp_15?: number | null
+  blue_comp_16?: number | null
+  blue_comp_17?: number | null
+  blue_comp_18?: number | null
+}
+
+/**
+ * An enumeration for if the match has occurred or is upcomming.
+ *
+ * Members:
+ * UPCOMING: Match has not yet occurred or data has not be fetched.
+ * COMPLETED: Match has been completed and data has been uploaded.
+ */
+export type MatchStatus = "Upcoming" | "Completed"
+
+/**
+ * An enumeration for the type of match at the event.
+ *
+ * Members:
+ * INVALID: The match is invalid for some reason.
+ * QUAL: Qualification Match
+ * EIGHTH: First round elimination match.
+ * QUARTER: Second round or quarterfinal elimination match.
+ * SEMI: Semifinal elimination match.
+ * FINAL: Finals elimination match.
+ */
+export type MatchType = "invalid" | "qm" | "ef" | "qf" | "sf" | "f"
+
+/**
+ * An enumeration for which alliance won a match.
+ *
+ * Members:
+ * RED: The red alliance won the match.
+ * BLUE: The blue alliance won the match.
+ * TIE: The match ended in a tie.
+ */
+export type MatchWinner = "red" | "blue" | "tie" | ""
+
 export type Message = {
   message: string
 }
@@ -342,11 +462,32 @@ export type TbaInitMatchesData = {
 
 export type TbaInitMatchesResponse = Message
 
-export type TeamGetTeamByNumberData = {
-  number: number
+export type TeamGetTeamByKeyData = {
+  key: string
 }
 
-export type TeamGetTeamByNumberResponse = Team
+export type TeamGetTeamByKeyResponse = Team
+
+export type TeamGetEventsByYearData = {
+  key: string
+  year: number
+}
+
+export type TeamGetEventsByYearResponse = Array<Event>
+
+export type TeamGetMatchesByEventData = {
+  eventKey: string
+  teamKey: string
+}
+
+export type TeamGetMatchesByEventResponse = Array<Match>
+
+export type TeamGetMatchesByYearData = {
+  teamKey: string
+  year: number
+}
+
+export type TeamGetMatchesByYearResponse = Array<Match>
 
 export type UsersReadUsersData = {
   limit?: number

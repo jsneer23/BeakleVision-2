@@ -32,8 +32,14 @@ import type {
   TbaInitEventsResponse,
   TbaInitMatchesData,
   TbaInitMatchesResponse,
-  TeamGetTeamByNumberData,
-  TeamGetTeamByNumberResponse,
+  TeamGetTeamByKeyData,
+  TeamGetTeamByKeyResponse,
+  TeamGetEventsByYearData,
+  TeamGetEventsByYearResponse,
+  TeamGetMatchesByEventData,
+  TeamGetMatchesByEventResponse,
+  TeamGetMatchesByYearData,
+  TeamGetMatchesByYearResponse,
   UsersReadUsersData,
   UsersReadUsersResponse,
   UsersCreateUserData,
@@ -395,20 +401,92 @@ export class TbaService {
 
 export class TeamService {
   /**
-   * Get Team By Number
+   * Get Team By Key
    * @param data The data for the request.
-   * @param data.number
+   * @param data.key
    * @returns Team Successful Response
    * @throws ApiError
    */
-  public static getTeamByNumber(
-    data: TeamGetTeamByNumberData,
-  ): CancelablePromise<TeamGetTeamByNumberResponse> {
+  public static getTeamByKey(
+    data: TeamGetTeamByKeyData,
+  ): CancelablePromise<TeamGetTeamByKeyResponse> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/team/{number}",
+      url: "/api/v1/team/{key}",
       path: {
-        number: data.number,
+        key: data.key,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Get Events By Year
+   * @param data The data for the request.
+   * @param data.key
+   * @param data.year
+   * @returns Event Successful Response
+   * @throws ApiError
+   */
+  public static getEventsByYear(
+    data: TeamGetEventsByYearData,
+  ): CancelablePromise<TeamGetEventsByYearResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/team/{key}/events/{year}",
+      path: {
+        key: data.key,
+        year: data.year,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Get Matches By Event
+   * @param data The data for the request.
+   * @param data.teamKey
+   * @param data.eventKey
+   * @returns Match Successful Response
+   * @throws ApiError
+   */
+  public static getMatchesByEvent(
+    data: TeamGetMatchesByEventData,
+  ): CancelablePromise<TeamGetMatchesByEventResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/team/{team_key}/event/{event_key}/matches",
+      path: {
+        team_key: data.teamKey,
+        event_key: data.eventKey,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Get Matches By Year
+   * @param data The data for the request.
+   * @param data.teamKey
+   * @param data.year
+   * @returns Match Successful Response
+   * @throws ApiError
+   */
+  public static getMatchesByYear(
+    data: TeamGetMatchesByYearData,
+  ): CancelablePromise<TeamGetMatchesByYearResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/team/{team_key}/matches/{year}",
+      path: {
+        team_key: data.teamKey,
+        year: data.year,
       },
       errors: {
         422: "Validation Error",
