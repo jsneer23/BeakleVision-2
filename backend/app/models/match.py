@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import field_validator, model_validator
+from pydantic import AfterValidator, model_validator
 from sqlalchemy import Column, DateTime
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -13,6 +13,7 @@ from app.tba.constants import (
 )
 
 from .event import Event
+from .utils import strip_string
 
 
 def _breakdown(match_dict: dict[str, Any], mapping: dict[str, list[str]]) -> None:
@@ -136,6 +137,16 @@ class MatchBase(SQLModel):
 
 class MatchCreate(MatchBase):
 
+    event_key: Annotated[str, AfterValidator(strip_string)]
+    key: Annotated[str, AfterValidator(strip_string)]
+
+    red_1: Annotated[str, AfterValidator(strip_string)]
+    red_2: Annotated[str, AfterValidator(strip_string)]
+    red_3: Annotated[str | None, AfterValidator(strip_string)]
+    blue_1: Annotated[str, AfterValidator(strip_string)]
+    blue_2: Annotated[str, AfterValidator(strip_string)]
+    blue_3: Annotated[str | None, AfterValidator(strip_string)]
+
     @model_validator(mode="before")
     @classmethod
     def validate_match(cls, match_dict: dict[str, Any]) -> dict[str, Any]:
@@ -156,13 +167,13 @@ class MatchCreate(MatchBase):
         match_dict["red_score"] = red_alliance.get("score", None)
         match_dict["blue_score"] = red_alliance.get("score", None)
 
-        match_dict["red_1"] = red_alliance["team_keys"][0][3:]
-        match_dict["red_2"] = red_alliance["team_keys"][1][3:]
-        match_dict["red_3"] = red_alliance["team_keys"][2][3:]
+        match_dict["red_1"] = red_alliance["team_keys"][0]
+        match_dict["red_2"] = red_alliance["team_keys"][1]
+        match_dict["red_3"] = red_alliance["team_keys"][2]
 
-        match_dict["blue_1"] = blue_alliance["team_keys"][0][3:]
-        match_dict["blue_2"] = blue_alliance["team_keys"][1][3:]
-        match_dict["blue_3"] = blue_alliance["team_keys"][2][3:]
+        match_dict["blue_1"] = blue_alliance["team_keys"][0]
+        match_dict["blue_2"] = blue_alliance["team_keys"][1]
+        match_dict["blue_3"] = blue_alliance["team_keys"][2]
 
         match_dict["red_dq"] = ",".join(t[3:] for t in red_dqs)
         match_dict["red_surrogate"] = ",".join(t[3:] for t in red_surrogates)
@@ -214,3 +225,47 @@ class Match(MatchBase, table=True):
     key: str = Field(primary_key=True)
 
     event_info: "Event" = Relationship(back_populates="matches") #3
+
+
+class MatchSimple(SQLModel):
+    """
+    Base Pydantic/SQLModel that returns simple match information.
+    """
+    year: int
+    event_key: str
+    key: str
+
+    match_type: MatchType
+    set_number: int
+    match_number: int
+    status: MatchStatus
+    video: str | None
+    red_1: str
+    red_2: str
+    red_3: str | None
+    red_dq: str
+    red_surrogate: str
+    blue_1: str
+    blue_2: str
+    blue_3: str | None
+    blue_dq: str
+    blue_surrogate: str
+    winner: MatchWinner | None
+
+    time: datetime | None = Field(sa_column=Column(DateTime(timezone=True)))
+    actual_time: datetime | None = Field(sa_column=Column(DateTime(timezone=True)))
+    predicted_time: datetime | None = Field(sa_column=Column(DateTime(timezone=True)))
+
+    # red breakdown
+    red_score: int | None = None
+
+    red_rp_1: bool | None = None
+    red_rp_2: bool | None = None
+    red_rp_3: bool | None = None
+
+    # blue breakdown
+    blue_score: int | None = None
+
+    blue_rp_1: bool | None = None
+    blue_rp_2: bool | None = None
+    blue_rp_3: bool | None = None

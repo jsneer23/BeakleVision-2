@@ -4,7 +4,7 @@ from app.tba.constants import (
 )
 
 
-def strip_string(value: str) -> str | None:
+def strip_string(value: str | None) -> str | None:
     """Utility function to strip whitespace from a string."""
     return value.strip() if value else None
 

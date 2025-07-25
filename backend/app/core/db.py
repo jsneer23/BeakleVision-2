@@ -5,7 +5,14 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.config import settings
 from app.crud import app as app_crud
-from app.models import Event, Match, Team, TeamYearStats, YearStats  # noqa: F401
+from app.models import (  # noqa: F401
+    Event,
+    Match,
+    Team,
+    TeamEvent,
+    TeamYearStats,
+    YearStats,
+)
 from app.models.app import User, UserCreate
 from app.services.year import YearStatsService
 

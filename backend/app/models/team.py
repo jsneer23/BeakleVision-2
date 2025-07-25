@@ -1,5 +1,5 @@
 import uuid
-from typing import Annotated, Any
+from typing import TYPE_CHECKING, Annotated, Any
 
 from pydantic import AfterValidator, field_validator, model_validator
 from sqlmodel import Field, Relationship, SQLModel
@@ -8,6 +8,9 @@ from app.tba.constants import District, StateProv
 from app.tba.utils import validate_year
 
 from .utils import get_state_prov, strip_string
+
+if TYPE_CHECKING:
+    from .team_event import TeamEvent
 
 
 class TeamBase(SQLModel):
@@ -51,6 +54,7 @@ class Team(TeamBase, table=True):
     district: District = Field(default=District("")) #TODO Implement district
 
     year_stats: list["TeamYearStats"] = Relationship(back_populates="team") #1
+    events: list["TeamEvent"] = Relationship(back_populates="team") #5
 
 
 class TeamYearStats(SQLModel, table=True):
@@ -58,9 +62,11 @@ class TeamYearStats(SQLModel, table=True):
     SQL table that holds team specific statistics for a given year.
     """
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+
     key: str = Field(foreign_key="team.key")
     year: int = Field(foreign_key="yearstats.year")
 
     team: "Team" = Relationship(back_populates="year_stats") #1
 
     # TODO: Add fields for year stats as needed
+    match_number: int

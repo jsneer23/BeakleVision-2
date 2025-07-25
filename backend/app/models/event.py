@@ -11,6 +11,7 @@ from .utils import get_district, get_state_prov, strip_string
 
 if TYPE_CHECKING:
     from .match import Match
+    from .team_event import TeamEvent
     from .year import YearStats
 
 class EventBase(SQLModel):
@@ -78,3 +79,4 @@ class Event(EventBase, table=True):
 
     year_stats: "YearStats" = Relationship(back_populates="events") #2
     matches: list["Match"] = Relationship(back_populates="event_info") #3
+    teams: list["TeamEvent"] = Relationship(back_populates="event") #4
