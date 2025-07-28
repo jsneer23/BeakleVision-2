@@ -11,7 +11,7 @@ In the past our scouting team has struggled with missed shifts, mishandled data,
 
 ## Technology Stack and Features
 
-This project was initially forked from the [Full StackAPI Template](https://github.com/fastapi/full-stack-fastapi-template). There are some changes in progress or planned. i.e. will eventually fully move off SQLModel in favor of pure SQLAlchemy and will also move away from Chakra UI. For now, the list from the original template is below.
+This project was initially forked from the [Full StackAPI Template](https://github.com/fastapi/full-stack-fastapi-template). There are some changes in progress or planned. i.e. We will eventually fully move off SQLModel in favor of pure SQLAlchemy and will also move away from Chakra UI. For now, the list from the original template is below.
 
 - ⚡ [**FastAPI**](https://fastapi.tiangolo.com) for the Python backend API.
     - 🧰 [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
@@ -32,13 +32,9 @@ This project was initially forked from the [Full StackAPI Template](https://gith
 - 🚢 Deployment instructions using Docker Compose, including how to set up a frontend Traefik proxy to handle automatic HTTPS certificates.
 - 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
 
-### Configure
-
-Remove `.dist` from the `.env` file. You can then update configs in the `.env` files to customize your configurations.
-
 ## Development
 
-General development docs are located in [development.md](./development.md). This includes using Docker Compose, custom local domains, `.env` configurations, etc.
+General development docs are located in [development.md](./development.md). This includes instructions for using Docker Compose, custom local domains, `.env` configurations, etc.
 
 Frontend specific docs can be found in [frontend/README.md](./frontend/README.md) while backend docs live in [backend/README.md](./backend/README.md).
 
